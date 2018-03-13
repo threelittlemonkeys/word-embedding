@@ -21,7 +21,7 @@ CUDA = torch.cuda.is_available()
 class cbow(nn.Module):
 
     def __init__(self, vocab_size):
-        super(cbow, self).__init__()
+        super().__init__()
 
         # architecture
         self.embed = nn.Embedding(vocab_size, EMBED_SIZE)
