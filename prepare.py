@@ -26,22 +26,24 @@ def load_data():
         for word in tokens:
             seq.append(vocab[word] if word in vocab else UNK_IDX)
         for i in range(CONTEXT_SIZE, len(seq) - CONTEXT_SIZE):
-            if any(x == UNK_IDX for x in seq[i - CONTEXT_SIZE:i + CONTEXT_SIZE + 1]):
+            context = seq[i - CONTEXT_SIZE:i + CONTEXT_SIZE + 1]
+            if any(x == UNK_IDX for x in context):
                 continue
-            data.append(seq[i - CONTEXT_SIZE:i] + seq[i + 1:i + CONTEXT_SIZE + 1] + [seq[i]])
+            del context[CONTEXT_SIZE]
+            data.append(context + [seq[i]])
     fo.close()
     return data, vocab
 
 def save_data(data):
     fo = open(sys.argv[1] + ".csv", "w")
     for seq in data:
-        fo.write("%s\n" % (" ".join([str(i) for i in seq])))
+        fo.write(" ".join([str(i) for i in seq]) + "\n")
     fo.close()
 
 def save_vocab(vocab):
-    fo = open("vocab", "w")
+    fo = open(sys.argv[1] + ".vocab", "w")
     for word, _ in sorted(vocab.items(), key = lambda x: x[1]):
-        fo.write("%s\n" % word)
+        fo.write(word + "\n")
     fo.close()
 
 if __name__ == "__main__":
