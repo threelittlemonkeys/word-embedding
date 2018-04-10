@@ -45,12 +45,13 @@ def train():
             loss = F.nll_loss(model(x), y.squeeze(1))
             loss.backward()
             optim.step()
-            loss = scalar(loss)
+            loss = scalar(loss) / len(x)
             loss_sum += loss
+        loss_sum /= len(data)
         if VERBOSE:
-            print("epoch = %d, loss = %f" % (i, loss_sum / len(data)))
+            print("epoch = %d, loss = %f" % (i, loss_sum))
         if i % SAVE_EVERY == 0 or i == epoch + num_epochs:
-            save_checkpoint(filename, model, i, loss_sum / len(data))
+            save_checkpoint(filename, model, i, loss_sum)
 
 if __name__ == "__main__":
     if len(sys.argv) != 5:
