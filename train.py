@@ -1,8 +1,9 @@
 import sys
-import os.path
 import re
+import time
 from model import *
 from utils import *
+from os.path import isfile
 
 def load_data():
     data = []
@@ -31,7 +32,7 @@ def train():
     data, vocab = load_data()
     model = cbow(len(vocab))
     optim = torch.optim.SGD(model.parameters(), lr = LEARNING_RATE, weight_decay = WEIGHT_DECAY)
-    epoch = load_checkpoint(sys.argv[1], model) if os.path.isfile(sys.argv[1]) else 0
+    epoch = load_checkpoint(sys.argv[1], model) if isfile(sys.argv[1]) else 0
     if CUDA:
         model = model.cuda()
     filename = re.sub("\.epoch[0-9]+$", "", sys.argv[1])
@@ -39,6 +40,7 @@ def train():
     print("training model...")
     for i in range(epoch + 1, epoch + num_epochs + 1):
         loss_sum = 0
+        timer = time.time()
         for x, y in data:
             loss = 0
             model.zero_grad()
@@ -47,11 +49,12 @@ def train():
             optim.step()
             loss = scalar(loss) / len(x)
             loss_sum += loss
+        timer = time.time() - timer
         loss_sum /= len(data)
-        if VERBOSE:
-            print("epoch = %d, loss = %f" % (i, loss_sum))
-        if i % SAVE_EVERY == 0 or i == epoch + num_epochs:
-            save_checkpoint(filename, model, i, loss_sum)
+        if i % SAVE_EVERY and i != epoch + num_epochs:
+            save_checkpoint("", "", i, loss_sum, timer)
+        else:
+            save_checkpoint(filename, model, i, loss_sum, timer)
 
 if __name__ == "__main__":
     if len(sys.argv) != 5:
