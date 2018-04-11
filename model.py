@@ -28,6 +28,9 @@ class cbow(nn.Module):
         self.linear1 = nn.Linear(EMBED_SIZE, EMBED_SIZE // 2)
         self.linear2 = nn.Linear(EMBED_SIZE // 2, vocab_size)
 
+        if CUDA:
+            self = self.cuda()
+
     def forward(self, x):
         h = self.embed(x)
         h = h.sum(1)
