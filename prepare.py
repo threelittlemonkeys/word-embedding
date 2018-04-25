@@ -8,23 +8,23 @@ def load_data():
     vocab = {UNK: UNK_IDX}
     fo = open(sys.argv[1])
     for line in fo:
-        tokens = tokenize(line)
-        for word in tokens:
-            if word not in freq:
-                freq[word] = 0
-            freq[word] += 1
-    for word, _ in sorted(freq.items(), key = lambda x: x[1], reverse = True):
-        vocab[word] = len(vocab)
+        tokens = tokenize(line, "word")
+        for w in tokens:
+            if w not in freq:
+                freq[w] = 0
+            freq[w] += 1
+    for w, _ in sorted(freq.items(), key = lambda x: x[1], reverse = True):
+        vocab[w] = len(vocab)
         if len(vocab) == VOCAB_SIZE:
             break
     fo.seek(0)
     for line in fo:
-        tokens = tokenize(line)
+        tokens = tokenize(line, "word")
         if len(tokens) < CONTEXT_SIZE * 2 + 1:
             continue
         seq = []
-        for word in tokens:
-            seq.append(vocab[word] if word in vocab else UNK_IDX)
+        for w in tokens:
+            seq.append(vocab[w] if w in vocab else UNK_IDX)
         for i in range(CONTEXT_SIZE, len(seq) - CONTEXT_SIZE):
             context = seq[i - CONTEXT_SIZE:i + CONTEXT_SIZE + 1]
             if any(x == UNK_IDX for x in context):
@@ -42,8 +42,8 @@ def save_data(data):
 
 def save_vocab(vocab):
     fo = open(sys.argv[1] + ".vocab", "w")
-    for word, _ in sorted(vocab.items(), key = lambda x: x[1]):
-        fo.write(word + "\n")
+    for w, _ in sorted(vocab.items(), key = lambda x: x[1]):
+        fo.write(w + "\n")
     fo.close()
 
 if __name__ == "__main__":

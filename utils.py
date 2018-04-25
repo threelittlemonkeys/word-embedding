@@ -1,12 +1,20 @@
 import re
 from model import *
 
-def tokenize(s):
-    s = s.lower()
-    s = re.sub("[^ a-z0-9\uAC00-\uD7A3]+", "", s)
-    s = re.sub("\s+", " ", s)
-    s = re.sub("^ | $", "", s)
-    return s.split(" ")
+def normalize(x):
+    x = re.sub("[^ a-zA-Z0-9\uAC00-\uD7A3]+", " ", x)
+    x = re.sub("\s+", " ", x)
+    x = re.sub("^ | $", "", x)
+    x = x.lower()
+    return x
+
+def tokenize(x, unit):
+    x = normalize(x)
+    if unit == "char":
+        x = re.sub(" ", "", x)
+        return list(x)
+    elif unit == "word":
+        return x.split(" ")
 
 def load_vocab(filename):
     print("loading vocab...")
