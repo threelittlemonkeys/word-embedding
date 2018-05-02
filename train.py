@@ -47,7 +47,7 @@ def train():
             loss = F.nll_loss(model(x), y.squeeze(1))
             loss.backward()
             optim.step()
-            loss = scalar(loss) / len(x)
+            loss = scalar(loss)
             loss_sum += loss
         timer = time.time() - timer
         loss_sum /= len(data)
