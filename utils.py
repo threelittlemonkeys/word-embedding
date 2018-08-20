@@ -26,21 +26,17 @@ def load_vocab(filename):
     fo.close()
     return vocab
 
-def load_checkpoint(filename, model = None, g2c = False):
+def load_checkpoint(filename, model = None):
     print("loading model...")
-    if g2c: # load weights into CPU
-        checkpoint = torch.load(filename, map_location = lambda storage, loc: storage)
-    else:
-        checkpoint = torch.load(filename)
-    if model:
-        model.load_state_dict(checkpoint["state_dict"])
+    checkpoint = torch.load(filename)
+    model.load_state_dict(checkpoint["state_dict"])
     epoch = checkpoint["epoch"]
     loss = checkpoint["loss"]
     print("saved model: epoch = %d, loss = %f" % (checkpoint["epoch"], checkpoint["loss"]))
     return epoch
 
 def save_checkpoint(filename, model, epoch, loss, time):
-    log = "epoch = %d, loss = %f, time = %f" % (epoch, loss, time)
+    print("epoch = %d, loss = %f, time = %f" % (epoch, loss, time))
     if filename and model:
         print("saving model...")
         checkpoint = {}
@@ -48,9 +44,4 @@ def save_checkpoint(filename, model, epoch, loss, time):
         checkpoint["epoch"] = epoch
         checkpoint["loss"] = loss
         torch.save(checkpoint, filename + ".epoch%d" % epoch)
-        log = "saved model: " + log
-    print(log)
-
-def gpu2cpu(filename):
-    checkpoint = torch.load(filename, map_location = lambda storage, loc: storage)
-    torch.save(checkpoint, filename + ".cpu")
+        print("saved model at epoch %d" % epoch)
