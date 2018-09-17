@@ -19,12 +19,13 @@ def run_model(model, data):
         data.append(["", UNK_IDX])
     for x in data:
         batch.append(x[1])
-    result = model.embed(Var(LongTensor(batch)))
+    result = model.embed(LongTensor(batch))
     for i in range(z):
         data[i].append(result[i].data)
     return data[:z]
 
 def evaluate():
+    k = 20
     word = sys.argv[3]
     data = []
     result = []
@@ -43,7 +44,7 @@ def evaluate():
         result.extend(run_model(model, data))
     for x in result:
         x.append(torch.dist(x[2], result[0][2]))
-    for x in sorted(result, key = lambda x: x[3], reverse = True):
+    for x in sorted(result, key = lambda x: x[3], reverse = True)[:k]:
         print(x[0], x[3])
 
 if __name__ == "__main__":

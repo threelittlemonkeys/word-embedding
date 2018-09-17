@@ -19,7 +19,7 @@ def load_data():
         batch_context.append(context)
         batch_word.append([word])
         if len(batch_word) == BATCH_SIZE:
-            data.append((Var(LongTensor(batch_context)), Var(LongTensor(batch_word))))
+            data.append((LongTensor(batch_context), LongTensor(batch_word)))
             batch_context = []
             batch_word = []
     fo.close()
