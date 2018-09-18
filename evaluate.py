@@ -35,8 +35,8 @@ def evaluate():
         del vocab[word]
     else:
         data.append([word, UNK_IDX])
-    for word in vocab:
-        data.append([word, vocab[word]])
+    for w in vocab:
+        data.append([w, vocab[w]])
         if len(data) == BATCH_SIZE:
             result.extend(run_model(model, data))
             data = []
@@ -44,7 +44,7 @@ def evaluate():
         result.extend(run_model(model, data))
     for x in result:
         x.append(torch.dist(x[2], result[0][2]))
-    for x in sorted(result, key = lambda x: x[3], reverse = True)[:k]:
+    for x in sorted(result, key = lambda x: x[3])[:k]:
         print(x[0], x[3])
 
 if __name__ == "__main__":

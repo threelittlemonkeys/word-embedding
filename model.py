@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-BATCH_SIZE = 64
+BATCH_SIZE = 128
 EMBED_SIZE = 300
 VOCAB_SIZE = 50000
 CONTEXT_SIZE = 2
@@ -24,16 +24,18 @@ class cbow(nn.Module):
 
         # architecture
         self.embed = nn.Embedding(vocab_size, EMBED_SIZE)
-        self.linear1 = nn.Linear(EMBED_SIZE, EMBED_SIZE // 2)
-        self.linear2 = nn.Linear(EMBED_SIZE // 2, vocab_size)
+        self.fc1 = nn.Linear(EMBED_SIZE, EMBED_SIZE // 2)
+        self.relu = nn.ReLU()
+        self.fc2 = nn.Linear(EMBED_SIZE // 2, vocab_size)
+        self.softmax = nn.LogSoftmax(1)
 
     def forward(self, x):
         h = self.embed(x)
         h = h.sum(1)
-        h = self.linear1(h)
-        h = F.relu(h)
-        h = self.linear2(h)
-        y = F.log_softmax(h, 1)
+        h = self.fc1(h)
+        h = self.relu(h)
+        h = self.fc2(h)
+        y = self.softmax(h)
         return y
 
 def LongTensor(*args):
