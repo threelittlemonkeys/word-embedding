@@ -38,6 +38,14 @@ class cbow(nn.Module):
         y = self.softmax(h)
         return y
 
+class skipgram(nn.Module):
+
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x):
+        return
+
 def LongTensor(*args):
     x = torch.LongTensor(*args)
     return x.cuda() if CUDA else x

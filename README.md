@@ -1,6 +1,6 @@
 # Word Embeddings
 
-Word embeddings in PyTorch.
+PyTorch implementations of word embedding models.
 
 - The Continuous Bag-of-Words model (CBOW)
 - The Skip-Gram model

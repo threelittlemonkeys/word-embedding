@@ -26,15 +26,15 @@ def run_model(model, data):
 
 def evaluate():
     k = 20
-    word = sys.argv[3]
+    y = sys.argv[3]
     data = []
     result = []
     model, vocab = load_model()
-    if word in vocab:
-        data.append([word, vocab[word]])
-        del vocab[word]
+    if y in vocab:
+        data.append([y, vocab[y]])
+        del vocab[y]
     else:
-        data.append([word, UNK_IDX])
+        data.append([y, UNK_IDX])
     for w in vocab:
         data.append([w, vocab[w]])
         if len(data) == BATCH_SIZE:
