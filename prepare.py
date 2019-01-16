@@ -13,7 +13,7 @@ def load_data():
             if w not in freq:
                 freq[w] = 0
             freq[w] += 1
-    for w, _ in sorted(freq.items(), key = lambda x: x[1], reverse = True):
+    for w, _ in sorted(freq.items(), key = lambda x: -x[1]):
         vocab[w] = len(vocab)
         if len(vocab) == VOCAB_SIZE:
             break
